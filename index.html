@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Lista de Compras</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+        .total-value {
+            text-align: right;
+        }
+        /* Estilos para adicionar itens */
+        .add-item-form {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-radius: 5px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .add-item-form input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-grow: 1;
+        }
+        .add-item-form input[type="number"] {
+            max-width: 100px; /* Limita a largura dos campos numéricos */
+        }
+        .add-item-form button {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-item-form button:hover {
+            background-color: #218838;
+        }
+        /* Estilos para responsividade */
+        @media (max-width: 600px) {
+            .add-item-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .add-item-form input[type="number"] {
+                max-width: 100%;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr { border: 1px solid #ccc; margin-bottom: 5px;}
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                text-align: left;
+            }
+            td:nth-of-type(1):before { content: "Produto:"; }
+            td:nth-of-type(2):before { content: "Qtd:"; }
+            td:nth-of-type(3):before { content: "Preço Uni:"; }
+            td:nth-of-type(4):before { content: "Total:"; }
+            .total-row td:nth-of-type(1) { text-align: center; font-weight: bold;}
+            .total-row td:nth-of-type(2),
+            .total-row td:nth-of-type(3),
+            .total-row td:nth-of-type(4) { display: none; } /* Esconde colunas extras na linha total para mobile */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minha Lista de Compras</h1>
+
+        <div class="add-item-form">
+            <input type="text" id="productName" placeholder="Nome do Produto" required>
+            <input type="number" id="quantity" placeholder="Quantidade" value="1" min="1" required>
+            <input type="number" id="unitPrice" placeholder="Preço Unitário (R$)" step="0.01" required>
+            <button onclick="addItem()">Adicionar Item</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário (R$)</th>
+                    <th>Total Item (R$)</th>
+                </tr>
+            </thead>
+            <tbody id="shoppingListBody">
+                <!-- Itens serão adicionados aqui via JavaScript -->
+            </tbody>
+            <tfoot id="shoppingListFooter">
+                <tr class="total-row">
+                    <td colspan="3" style="text-align: right;"><strong>TOTAL GERAL:</strong></td>
+                    <td class="total-value" id="grandTotal">R$ 0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script>
+        let grandTotal = 0;
+
+        function formatCurrency(value) {
+            return `R$ ${value.toFixed(2).replace('.', ',')}`;
+        }
+
+        function addItem() {
+            const productName = document.getElementById('productName').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value);
+
+            // Validação básica
+            if (productName === "" || isNaN(quantity) || quantity <= 0 || isNaN(unitPrice) || unitPrice < 0) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return;
+            }
+
+            const totalItem = quantity * unitPrice;
+            grandTotal += totalItem;
+
+            const tableBody = document.getElementById('shoppingListBody');
+            const newRow = tableBody.insertRow();
+
+            newRow.innerHTML = `
+                <td>${productName}</td>
+                <td>${quantity}</td>
+                <td>${formatCurrency(unitPrice)}</td>
+                <td>${formatCurrency(totalItem)}</td>
+            `;
+
+            document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
+
+            // Limpar campos após adicionar
+            document.getElementById('productName').value = '';
+            document.getElementById('quantity').value = '1';
+            document.getElementById('unitPrice').value = '';
+            document.getElementById('productName').focus(); // Volta o foco para o campo de produto
+        }
+
+        // Para permitir adicionar item pressionando Enter no campo de preço
+        document.getElementById('unitPrice').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede o comportamento padrão (submit de formulário)
+                addItem();
+            }
+        });
+
+        // Inicializa o total geral ao carregar a página
+        document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
+
+    </script>
+</body>
+</html>
