@@ -1,52 +1,65 @@
+let grandTotal = 0;
 
-        let grandTotal = 0;
+function formatCurrency(value) {
+    return `R$ ${value.toFixed(2).replace('.', ',')}`;
+}
 
-        function formatCurrency(value) {
-            return `R$ ${value.toFixed(2).replace('.', ',')}`;
-        }
+function preencherDadosParaImpressao() {
+    const inputs = document.querySelectorAll('.orcamento-info input');
+    inputs.forEach(input => {
+        const label = input.previousElementSibling.textContent; // Pega o texto do label
+        const valor = input.value;
+        const div = document.createElement('div');
+        div.textContent = `${label}: ${valor}`; // Adicionei os dois pontos aqui
+        input.parentNode.replaceChild(div, input); // Substitui o input pela div
+    });
+}
 
-        function addItem() {
-            const productName = document.getElementById('productName').value;
-            const quantity = parseInt(document.getElementById('quantity').value);
-            const unitPrice = parseFloat(document.getElementById('unitPrice').value);
+window.addEventListener('beforeprint', preencherDadosParaImpressao);
 
-            // Validação básica
-            if (productName === "" || isNaN(quantity) || quantity <= 0 || isNaN(unitPrice) || unitPrice < 0) {
-                alert("Por favor, preencha todos os campos corretamente.");
-                return;
-            }
+function addItem() {
+    const productName = document.getElementById('productName').value;
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const unitPrice = parseFloat(document.getElementById('unitPrice').value);
 
-            const totalItem = quantity * unitPrice;
-            grandTotal += totalItem;
+    // Validação básica
+    if (productName === "" || isNaN(quantity) || quantity <= 0 || isNaN(unitPrice) || unitPrice < 0) {
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+    }
 
-            const tableBody = document.getElementById('shoppingListBody');
-            const newRow = tableBody.insertRow();
+    const totalItem = quantity * unitPrice;
+    grandTotal += totalItem;
 
-            newRow.innerHTML = `
-                <td>${productName}</td>
-                <td>${quantity}</td>
-                <td>${formatCurrency(unitPrice)}</td>
-                <td>${formatCurrency(totalItem)}</td>
-            `;
+    const tableBody = document.getElementById('shoppingListBody');
+    const newRow = tableBody.insertRow();
 
-            document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
+    newRow.innerHTML = `
+        <td>${productName}</td>
+        <td>${quantity}</td>
+        <td>${formatCurrency(unitPrice)}</td>
+        <td>${formatCurrency(totalItem)}</td>
+    `;
 
-            // Limpar campos após adicionar
-            document.getElementById('productName').value = '';
-            document.getElementById('quantity').value = ''; // Ou '0' se preferir começar com zero
-            document.getElementById('unitPrice').value = '';
-            document.getElementById('productName').focus(); // Volta o foco para o campo de produto
-        }
+    document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
 
-        // Para permitir adicionar item pressionando Enter no campo de preço
-        document.getElementById('unitPrice').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Impede o comportamento padrão (submit de formulário)
-                addItem();
-            }
-        });
+    // Limpar campos após adicionar
+    document.getElementById('productName').value = '';
+    document.getElementById('quantity').value = ''; // Ou '0' se preferir começar com zero
+    document.getElementById('unitPrice').value = '';
+    document.getElementById('productName').focus(); // Volta o foco para o campo de produto
+}
+
+// Para permitir adicionar item pressionando Enter no campo de preço
+document.getElementById('unitPrice').addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Impede o comportamento padrão (submit de formulário)
+        addItem();
+    }
+});
+
 // Lógica para pular para o próximo campo com Enter no campo de produto
-document.getElementById('productName').addEventListener('keypress', function(event) {
+document.getElementById('productName').addEventListener('keypress', function (event) {
     // Verifica se a tecla pressionada foi Enter (código 13 ou a propriedade 'Enter')
     if (event.key === 'Enter') {
         event.preventDefault(); // Impede o comportamento padrão de submit (se houvesse um formulário)
@@ -55,16 +68,12 @@ document.getElementById('productName').addEventListener('keypress', function(eve
 });
 
 // Para pular de quantidade para preço unitário com Enter
-document.getElementById('quantity').addEventListener('keypress', function(event) {
+document.getElementById('quantity').addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
         document.getElementById('unitPrice').focus(); // Foca no campo de preço unitário
     }
 });
 
-// O código para pular do preço unitário para adicionar item (apertando Enter) já existe!
-// Se você apertar Enter no campo de preço, ele chamará a função addItem().
-// Não precisamos adicionar nada para esse, pois já está lá.
-        // Inicializa o total geral ao carregar a página
-        document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
-
+// Inicializa o total geral ao carregar a página
+document.getElementById('grandTotal').textContent = formatCurrency(grandTotal);
