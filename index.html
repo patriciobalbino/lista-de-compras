@@ -3,269 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Lista de Compras</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #0056b3;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .total-row {
-            font-weight: bold;
-            background-color: #e9ecef;
-        }
-        .total-value {
-            text-align: right;
-        }
-        /* Estilos para adicionar itens */
-        .add-item-form {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e7f3fe;
-            border-radius: 5px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .add-item-form input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            flex-grow: 1;
-        }
-        .add-item-form input[type="number"] {
-            max-width: 100px; /* Limita a largura dos campos numéricos */
-        }
-        .add-item-form button {
-            padding: 8px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .add-item-form button:hover {
-            background-color: #218838;
-        }
-        /* Estilos para responsividade */
-        @media (max-width: 600px) {
-            .add-item-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .add-item-form input[type="number"] {
-                max-width: 100%;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-            tr { border: 1px solid #ccc; margin-bottom: 5px;}
-            td {
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-                text-align: right;
-            }
-            td:before {
-                position: absolute;
-                top: 6px;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                font-weight: bold;
-                text-align: left;
-            }
-            td:nth-of-type(1):before { content: "Produto:"; }
-            td:nth-of-type(2):before { content: "Qtd:"; }
-            td:nth-of-type(3):before { content: "Preço Uni:"; }
-            td:nth-of-type(4):before { content: "Total:"; }
-            .total-row td:nth-of-type(1) { text-align: center; font-weight: bold;}
-            .total-row td:nth-of-type(2),
-            .total-row td:nth-of-type(3),
-            .total-row td:nth-of-type(4) { display: none; } /* Esconde colunas extras na linha total para mobile */
-        }
-
-        /* CSS DO CABEÇALHO DO ORÇAMENTO (ESTILOS GERAIS) */
-        .orcamento-header {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-
-        .orcamento-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .orcamento-campo {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .orcamento-campo label {
-            font-size: 0.9em;
-            margin-bottom: 3px;
-        }
-
-        .orcamento-campo input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        /* CSS DE IMPRESSÃO */
-        @media print {
-            body {
-                margin: 1.5cm; /* Reduz as margens */
-                font-size: 10pt;
-                display: block; /* Remove flexbox */
-                min-height: auto;
-            }
-
-            .container {
-                max-width: none;
-                margin: 0;
-                padding: 0;
-                box-shadow: none;
-            }
-
-            .orcamento-header {
-                border: 1px solid #000;
-                margin-bottom: 10px;
-                padding: 5px;
-            }
-
-            .orcamento-info {
-                 display: flex;
-                flex-direction: row; /* Organiza os campos horizontalmente */
-                flex-wrap: wrap; /* Permite que os campos quebrem para a próxima linha */
-                justify-content: space-between; /* Espaça os campos uniformemente */
-            }
-
-            .orcamento-campo {
-                width: 30%; /* Define a largura de cada campo (ajuste conforme necessário) */
-                margin-bottom: 5px;
-            }
-
-            /* Oculta os campos de entrada */
-            .orcamento-campo input {
-                display: none;
-            }
-
-            /* Exibe os dados para impressão */
-            .orcamento-campo .print-value {
-                display: block;
-            }
-
-            table {
-                width: 80%; /* Reduz a largura da tabela */
-                max-width: none !important;
-                margin: 1cm auto; /* Centraliza a tabela horizontalmente e adiciona margem superior */
-                border-collapse: collapse;
-            }
-
-            th,
-            td {
-                border: 1.5px solid #000 !important; /* Engrossa as bordas */
-                padding: 5px;
-                text-align: left;
-            }
-
-            th {
-                background-color: #eee !important;
-            }
-
-            /* Oculta elementos desnecessários na impressão */
-            .print-button-container,
-            .add-item-form,
-            h1,
-            .orcamento-header h2 { /* Oculta o título "Orçamento" */
-                display: none !important;
-            }
-
-            /* Exibe o cabeçalho do orçamento para impressão */
-            .orcamento-header.print-only {
-                display: block !important;
-            }
-        }
-
-        /* Estilos para elementos que aparecem SÓ na impressão */
-        .print-only {
-            display: none; /* Oculta por padrão */
-        }
-    </style>
+    <title>Sistema de Orçamentos</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Minha Lista de Compras</h1>
+        <header>
+            <h1>Sistema de Orçamentos</h1>
+            <p>Crie e gerencie seus orçamentos de forma eficiente</p>
+        </header>
 
-        <div class="add-item-form">
-            <input type="text" id="productName" placeholder="Nome do Produto" required>
-            <input type="number" id="quantity" placeholder="Quantidade" min="1" required>
-            <input type="number" id="unitPrice" placeholder="Preço Unitário (R$)" step="0.01" required>
-            <button onclick="addItem()">Adicionar Item</button>
+        <div class="add-item-form" id="addItemForm">
+            <div class="input-group">
+                <label for="productName">Nome do Produto:</label>
+                <input type="text" id="productName" placeholder="Digite o nome do produto" required>
+                <div class="validation-message" id="productValidation">Por favor, informe o nome do produto!</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="quantity">Quantidade:</label>
+                <input type="number" id="quantity" placeholder="Quantidade" min="1" step="1" required>
+                <div class="validation-message" id="quantityValidation">Informe uma quantidade válida!</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="unitPrice">Preço Unitário (R$):</label>
+                <input type="number" id="unitPrice" placeholder="Preço unitário" step="0.01" required>
+                <div class="validation-message" id="priceValidation">Informe um preço válido!</div>
+            </div>
+            
+            <button id="addItemBtn">Adicionar Item</button>
         </div>
 
-        <!-- HTML DO CABEÇALHO DO ORÇAMENTO -->
         <div class="orcamento-header">
-            <h2>Orçamento</h2>
+            <h2>Dados do Orçamento</h2>
             <div class="orcamento-info">
                 <div class="orcamento-campo">
                     <label for="cliente">Cliente:</label>
-                    <input type="text" id="cliente">
+                    <input type="text" id="cliente" class="enter-navigation" placeholder="Nome do cliente">
                     <span class="print-value" id="cliente-print"></span>
                 </div>
+                
                 <div class="orcamento-campo">
                     <label for="data">Data:</label>
-                    <input type="date" id="data">
+                    <input type="text" id="data" class="enter-navigation" placeholder="DD/MM/AAAA">
                     <span class="print-value" id="data-print"></span>
                 </div>
+                
                 <div class="orcamento-campo">
                     <label for="endereco">Endereço:</label>
-                    <input type="text" id="endereco">
+                    <input type="text" id="endereco" class="enter-navigation" placeholder="Endereço completo">
                     <span class="print-value" id="endereco-print"></span>
                 </div>
-                <!-- Adicione mais campos conforme necessário -->
+                
+                <div class="orcamento-campo">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" class="enter-navigation" placeholder="(00) 00000-0000">
+                    <span class="print-value" id="telefone-print"></span>
+                </div>
             </div>
         </div>
 
@@ -276,6 +71,7 @@
                     <th>Quantidade</th>
                     <th>Preço Unitário (R$)</th>
                     <th>Total Item (R$)</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="shoppingListBody">
@@ -285,14 +81,24 @@
                 <tr class="total-row">
                     <td colspan="3" style="text-align: right;"><strong>TOTAL GERAL:</strong></td>
                     <td class="total-value" id="grandTotal">R$ 0.00</td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
-        <div class="print-button-container">
-            <button onclick="window.print()">Imprimir Lista</button>
+        
+        <div class="actions">
+            <button id="printBtn">Imprimir Orçamento</button>
+            <button id="clearBtn">Limpar Tudo</button>
+            <button id="savePdfBtn">Salvar como PDF</button>
         </div>
+        
+        <footer>
+            <p>Orçamento gerado em <span id="currentDate"></span></p>
+        </footer>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
