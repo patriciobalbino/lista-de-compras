@@ -5,14 +5,13 @@ function formatCurrency(value) {
 }
 
 function preencherDadosParaImpressao() {
-    const inputs = document.querySelectorAll('.orcamento-info input');
-    inputs.forEach(input => {
-        const label = input.previousElementSibling.textContent; // Pega o texto do label
-        const valor = input.value;
-        const div = document.createElement('div');
-        div.textContent = `${label}: ${valor}`; // Adicionei os dois pontos aqui
-        input.parentNode.replaceChild(div, input); // Substitui o input pela div
-    });
+    const cliente = document.getElementById('cliente').value;
+    const data = document.getElementById('data').value;
+    const endereco = document.getElementById('endereco').value;
+
+    document.getElementById('cliente-print').textContent = `Cliente: ${cliente}`;
+    document.getElementById('data-print').textContent = `Data: ${data}`;
+    document.getElementById('endereco-print').textContent = `Endereço: ${endereco}`;
 }
 
 window.addEventListener('beforeprint', preencherDadosParaImpressao);

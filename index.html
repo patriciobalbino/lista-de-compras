@@ -156,17 +156,17 @@
         /* CSS DE IMPRESSÃO */
         @media print {
             body {
-                margin: 2cm;
+                margin: 1.5cm; /* Reduz as margens */
                 font-size: 10pt;
-                display: block; /* Remove flexbox para impressão */
-                min-height: auto; /* Remove altura mínima */
+                display: block; /* Remove flexbox */
+                min-height: auto;
             }
 
             .container {
-                max-width: none; /* Remove largura máxima */
-                margin: 0; /* Remove margens */
-                padding: 0; /* Remove preenchimento */
-                box-shadow: none; /* Remove sombra */
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
             }
 
             .orcamento-header {
@@ -176,24 +176,37 @@
             }
 
             .orcamento-info {
-                display: flex;
-                flex-direction: column; /* Coloca os campos em colunas */
+                 display: flex;
+                flex-direction: row; /* Organiza os campos horizontalmente */
+                flex-wrap: wrap; /* Permite que os campos quebrem para a próxima linha */
+                justify-content: space-between; /* Espaça os campos uniformemente */
             }
 
             .orcamento-campo {
+                width: 30%; /* Define a largura de cada campo (ajuste conforme necessário) */
                 margin-bottom: 5px;
             }
 
+            /* Oculta os campos de entrada */
+            .orcamento-campo input {
+                display: none;
+            }
+
+            /* Exibe os dados para impressão */
+            .orcamento-campo .print-value {
+                display: block;
+            }
+
             table {
-                width: 100%; /* Ocupa toda a largura */
+                width: 80%; /* Reduz a largura da tabela */
                 max-width: none !important;
-                margin: 0;
+                margin: 1cm auto; /* Centraliza a tabela horizontalmente e adiciona margem superior */
                 border-collapse: collapse;
             }
 
             th,
             td {
-                border: 1px solid #000 !important;
+                border: 1.5px solid #000 !important; /* Engrossa as bordas */
                 padding: 5px;
                 text-align: left;
             }
@@ -205,9 +218,20 @@
             /* Oculta elementos desnecessários na impressão */
             .print-button-container,
             .add-item-form,
-            h1 {
+            h1,
+            .orcamento-header h2 { /* Oculta o título "Orçamento" */
                 display: none !important;
             }
+
+            /* Exibe o cabeçalho do orçamento para impressão */
+            .orcamento-header.print-only {
+                display: block !important;
+            }
+        }
+
+        /* Estilos para elementos que aparecem SÓ na impressão */
+        .print-only {
+            display: none; /* Oculta por padrão */
         }
     </style>
 </head>
@@ -229,14 +253,17 @@
                 <div class="orcamento-campo">
                     <label for="cliente">Cliente:</label>
                     <input type="text" id="cliente">
+                    <span class="print-value" id="cliente-print"></span>
                 </div>
                 <div class="orcamento-campo">
                     <label for="data">Data:</label>
                     <input type="date" id="data">
+                    <span class="print-value" id="data-print"></span>
                 </div>
                 <div class="orcamento-campo">
                     <label for="endereco">Endereço:</label>
                     <input type="text" id="endereco">
+                    <span class="print-value" id="endereco-print"></span>
                 </div>
                 <!-- Adicione mais campos conforme necessário -->
             </div>
