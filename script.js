@@ -33,7 +33,7 @@
 
             // Limpar campos após adicionar
             document.getElementById('productName').value = '';
-            document.getElementById('quantity').value = '1';
+            document.getElementById('quantity').value = ''; // Ou '0' se preferir começar com zero
             document.getElementById('unitPrice').value = '';
             document.getElementById('productName').focus(); // Volta o foco para o campo de produto
         }
